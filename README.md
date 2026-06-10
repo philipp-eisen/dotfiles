@@ -63,14 +63,14 @@ chsh -s "$(command -v zsh)"
 ## Daily usage
 
 ```sh
-# change something: edit home/*.nix, then apply:
-hms   # alias for: home-manager switch --flake ~/dev/repos/dotfiles#phil@mac (#phil@vm on linux)
+# change something: edit home/*.nix, then
+home-manager switch --flake ~/dev/repos/dotfiles#phil@mac   # or #phil@vm
 
 # IMPORTANT: the flake only sees git-TRACKED files — `git add` new files first,
 # or you'll get "Path ... is not tracked by Git".
 
 # update all packages to latest pinned nixpkgs:
-cd ~/dev/repos/dotfiles && nix flake update && hms
+cd ~/dev/repos/dotfiles && nix flake update && home-manager switch --flake .#phil@mac
 
 # something broke? roll back to the previous generation:
 home-manager generations          # list states
