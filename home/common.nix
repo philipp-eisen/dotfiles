@@ -63,10 +63,6 @@
   programs.zsh = {
     enable = true;
 
-    autosuggestion = {
-      enable = true;
-      highlight = "fg=blue";
-    };
     syntaxHighlighting.enable = true;
 
     oh-my-zsh = {

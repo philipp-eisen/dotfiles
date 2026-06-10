@@ -16,6 +16,7 @@
   programs.zsh.oh-my-zsh.plugins = [ "macos" ];
 
   programs.zsh.shellAliases = {
+    hms = "home-manager switch --flake ~/dev/repos/dotfiles#phil@mac";
     ls = "ls -G"; # BSD ls
     nf = "osascript -e 'display notification \"The command finished\" with title \"Done\"'";
     chrome = "/usr/bin/open -a \"/Applications/Google Chrome.app\" --args";
