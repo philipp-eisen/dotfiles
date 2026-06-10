@@ -53,11 +53,22 @@ git clone <this-repo-url> ~/dev/repos/dotfiles
 nix run home-manager/master -- switch -b backup --flake ~/dev/repos/dotfiles#phil@vm
 
 # 4. Make the nix-installed zsh the login shell (home-manager can't do this
-#    on non-NixOS):
+#    on non-NixOS). Run chsh via sudo — cloud VM accounts are usually
+#    passwordless, so plain chsh can't authenticate. The trailing "$USER"
+#    matters: without it, sudo chsh changes ROOT's shell.
 command -v zsh | sudo tee -a /etc/shells
-chsh -s "$(command -v zsh)"
+sudo chsh -s "$(command -v zsh)" "$USER"
 
 # 5. Log out/in.
+```
+
+No sudo on the box? Leave bash as the login shell and hand interactive
+sessions to zsh by appending this to `~/.bashrc`:
+
+```sh
+if [ -t 1 ] && [ -z "$ZSH_VERSION" ] && command -v zsh >/dev/null; then
+  exec zsh
+fi
 ```
 
 ## Daily usage
