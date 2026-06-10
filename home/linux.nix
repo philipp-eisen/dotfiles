@@ -6,6 +6,7 @@
   targets.genericLinux.enable = true;
 
   programs.zsh.shellAliases = {
+    hms = "home-manager switch --flake ~/dev/repos/dotfiles#phil@vm";
     ls = "ls --color=auto"; # GNU ls
   };
 
