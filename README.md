@@ -1,10 +1,11 @@
 # dotfiles
 
-Portable shell setup via [Nix](https://nixos.org) + [Home Manager](https://github.com/nix-community/home-manager).
-One repo, identical shell (zsh + oh-my-zsh + starship + fzf + mise + aliases + git config + CLI tools) on macOS and Linux.
+Portable shell setup via [Nix](https://nixos.org), [nix-darwin](https://github.com/nix-darwin/nix-darwin), and [Home Manager](https://github.com/nix-community/home-manager).
+One repo, identical shell (zsh + oh-my-zsh + starship + fzf + mise + aliases + git config + CLI tools) on macOS and Linux, with macOS system and Homebrew state declared through nix-darwin.
 
 ```
 flake.nix          pins nixpkgs + home-manager (flake.lock = exact versions everywhere)
+darwin/system.nix  mac system config: nix-darwin, Homebrew, casks, editor extensions
 home/common.nix    ~90% of the setup, shared across machines
 home/darwin.nix    mac-only: brew shellenv, orbstack, 1Password git signing, macOS aliases
 home/linux.nix     vm-only: genericLinux fixes, GNU ls, pnpm path
@@ -21,9 +22,9 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 # 2. Open a NEW terminal (so `nix` is on PATH), then clone:
 git clone <this-repo-url> ~/dev/repos/dotfiles
 
-# 3. First activation. -b backup moves any existing .zshrc/.zprofile/.zshenv
-#    aside as *.backup instead of refusing to overwrite them.
-nix run home-manager/master -- switch -b backup --flake ~/dev/repos/dotfiles#phil@mac
+# 3. First activation. nix-darwin owns macOS system state and runs
+#    Home Manager for the phil user.
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dev/repos/dotfiles#phil
 
 # 4. If a ~/.gitconfig exists, move it aside — git reads it AFTER the
 #    home-manager-managed ~/.config/git/config, so it would win conflicts:
@@ -32,9 +33,10 @@ nix run home-manager/master -- switch -b backup --flake ~/dev/repos/dotfiles#phi
 # 5. Bring over secrets (see "Secrets" below), then open a new shell.
 ```
 
-Homebrew handles casks / GUI apps only (orbstack, tailscale, 1password, ...).
-CLI tools belong in `home.packages`; PATH is ordered (in `darwin.nix`) so the
-nix version wins if brew has the same tool.
+Homebrew casks, taps, formulae, and editor extensions are declared in
+`darwin/system.nix`. CLI tools still belong in `home.packages` when nixpkgs has
+a good package; PATH is ordered (in `darwin.nix`) so the nix version wins if
+brew has the same tool.
 
 ## Install: Ubuntu / Debian VM
 
@@ -75,17 +77,20 @@ fi
 
 ```sh
 # change something: edit home/*.nix, then
-home-manager switch --flake ~/dev/repos/dotfiles#phil@mac   # or #phil@vm
+sudo darwin-rebuild switch --flake ~/dev/repos/dotfiles#phil # mac
+home-manager switch --flake ~/dev/repos/dotfiles#phil@vm     # linux VM
 
 # IMPORTANT: the flake only sees git-TRACKED files — `git add` new files first,
 # or you'll get "Path ... is not tracked by Git".
 
 # update all packages to latest pinned nixpkgs:
-cd ~/dev/repos/dotfiles && nix flake update && home-manager switch --flake .#phil@mac
+cd ~/dev/repos/dotfiles && nix flake update && sudo darwin-rebuild switch --flake .#phil
 
 # something broke? roll back to the previous generation:
-home-manager generations          # list states
-home-manager switch --rollback    # undo last switch
+darwin-rebuild --list-generations  # list mac states
+sudo darwin-rebuild --rollback     # undo last mac switch
+home-manager generations           # list linux VM states
+home-manager switch --rollback     # undo last linux VM switch
 ```
 
 Commit `flake.lock` — it's what makes every machine get bit-for-bit identical
