@@ -83,6 +83,9 @@ home-manager switch --flake ~/dev/repos/dotfiles#phil@mac   # or #phil@vm
 # update all packages to latest pinned nixpkgs:
 cd ~/dev/repos/dotfiles && nix flake update && home-manager switch --flake .#phil@mac
 
+# update Codex CLI, which is currently installed by the Homebrew cask:
+brew upgrade --cask codex
+
 # something broke? roll back to the previous generation:
 home-manager generations          # list states
 home-manager switch --rollback    # undo last switch
@@ -90,6 +93,15 @@ home-manager switch --rollback    # undo last switch
 
 Commit `flake.lock` — it's what makes every machine get bit-for-bit identical
 tool versions.
+
+## Dependency automation
+
+GitHub Dependabot is configured to open weekly PRs for:
+
+- Nix flake inputs in `flake.lock`
+- GitHub Actions used by workflows
+
+Those PRs run CI with `nix flake check --all-systems` before merge.
 
 ## Secrets
 
