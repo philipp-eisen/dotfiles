@@ -48,9 +48,11 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 # 2. New shell (or `. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh`), then:
 git clone <this-repo-url> ~/dev/repos/dotfiles
 
-# 3. Activate. If the VM is ARM (e.g. an aarch64 cloud box) or the user isn't
-#    `phil`, adjust `system` / `username` for phil@vm in flake.nix first.
+# 3. Activate. If the user isn't `phil`, adjust `username` in flake.nix first.
+#    x86_64 Linux:
 nix run home-manager/master -- switch -b backup --flake ~/dev/repos/dotfiles#phil@vm
+#    aarch64 Linux:
+nix run home-manager/master -- switch -b backup --flake ~/dev/repos/dotfiles#phil@armvm
 
 # 4. Make the nix-installed zsh the login shell (home-manager can't do this
 #    on non-NixOS). Run chsh via sudo — cloud VM accounts are usually

@@ -35,10 +35,23 @@
           modules = [ ./home/common.nix ./home/darwin.nix ];
         };
 
-        # Adjust system (e.g. aarch64-linux) and username to match the VM.
+        # x86_64 Linux VM.
         "phil@vm" = mkHome {
           system = "x86_64-linux";
           modules = [ ./home/common.nix ./home/linux.nix ];
+        };
+
+        # ARM Linux VM.
+        "phil@armvm" = mkHome {
+          system = "aarch64-linux";
+          modules = [
+            ./home/common.nix
+            ./home/linux.nix
+            ({ lib, ... }: {
+              programs.zsh.shellAliases.hms =
+                lib.mkForce "home-manager switch --flake ~/dev/repos/dotfiles#phil@armvm";
+            })
+          ];
         };
       };
     };
