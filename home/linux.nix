@@ -12,10 +12,15 @@
 
   home.sessionVariables = {
     PNPM_HOME = "${config.home.homeDirectory}/.local/share/pnpm";
+    TERMINFO_DIRS = "${config.home.profileDirectory}/share/terminfo:/usr/share/terminfo";
   };
 
   home.sessionPath = [
     "${config.home.homeDirectory}/.local/share/pnpm"
+  ];
+
+  home.packages = [
+    pkgs.ghostty.terminfo
   ];
 
   # On a VM you may want gcloud from nixpkgs instead of the brew cask:
