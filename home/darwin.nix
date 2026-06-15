@@ -1,7 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Homebrew stays in charge of casks / GUI apps (orbstack, tailscale, gcloud, ...)
+  # nix-darwin declares Homebrew packages; this keeps shell integration and PATH
+  # ordering explicit in the user session.
   programs.zsh.profileExtra = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -16,7 +17,7 @@
   programs.zsh.oh-my-zsh.plugins = [ "macos" ];
 
   programs.zsh.shellAliases = {
-    hms = "home-manager switch --flake ~/dev/repos/dotfiles#phil@mac";
+    hms = "sudo darwin-rebuild switch --flake ~/dev/repos/dotfiles#phil";
     ls = "ls -G"; # BSD ls
     nf = "osascript -e 'display notification \"The command finished\" with title \"Done\"'";
     chrome = "/usr/bin/open -a \"/Applications/Google Chrome.app\" --args";
