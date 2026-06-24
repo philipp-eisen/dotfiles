@@ -48,6 +48,7 @@
 
   home.sessionPath = [
     "${config.home.homeDirectory}/Library/Android/sdk/emulator"
+    "${config.home.homeDirectory}/Library/Android/sdk/platform-tools"
     "${config.home.homeDirectory}/Library/Android/sdk/tools"
     "${config.home.homeDirectory}/Library/pnpm"
     "${config.home.homeDirectory}/.spicetify"
