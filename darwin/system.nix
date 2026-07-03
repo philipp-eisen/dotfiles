@@ -47,14 +47,18 @@
       "oven-sh/bun"
       "philipp-eisen/tap"
       "pulumi/tap"
-      "steipete/tap"
+      {
+        name = "steipete/tap";
+        trusted = true;
+      }
       "supabase/tap"
     ];
 
     brews = [
       # Installed custom-tap formulae kept manual until their taps are trusted:
-      # bridle, depot, opencode, padel-tui, supabase, terraform.
+      # bridle, depot, padel-tui, supabase, terraform.
       "amass"
+      "anomalyco/tap/opencode"
       "awscli"
       "azure-cli"
       "bat"
@@ -75,6 +79,8 @@
       "go"
       "herdr"
       "jj"
+      "jpeg-xl"
+      "libssh"
       "livekit-cli"
       "llama.cpp"
       "llmfit"
@@ -88,6 +94,7 @@
       "node"
       "nuget"
       "openjdk"
+      "openexr"
       "pgsync"
       "pnpm"
       "portaudio"
@@ -96,6 +103,7 @@
       "railway"
       "render"
       "ripgrep"
+      "scrcpy"
       "starship"
       "temporal"
       "tree"
@@ -110,6 +118,7 @@
       "1password-cli"
       "bruno"
       "codex"
+      "codexbar"
       "gcloud-cli"
       "inkscape"
       "jordanbaird-ice"
@@ -172,6 +181,7 @@
       npm "@anthropic-ai/claude-code"
       npm "@earendil-works/pi-coding-agent"
       npm "@hubspot/cli"
+      npm "browse"
       npm "vercel"
     '';
   };
