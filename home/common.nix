@@ -30,12 +30,14 @@
     kubectx # also provides kubens
     opentofu # terraform fork; free license -> comes prebuilt from the binary cache
     awscli2
+    redis # for redis-cli
+    temporal-cli # `temporal` — workflow starts/backfills against telli Temporal
 
     # misc
     gnupg
 
     # candidates to add when needed:
-    # cmake dive doppler nmap postgresql_15 pulumi temporal-cli llama-cpp
+    # cmake dive doppler nmap postgresql_15 pulumi llama-cpp
   ];
 
   home.sessionPath = [
