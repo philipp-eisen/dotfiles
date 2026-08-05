@@ -11,6 +11,9 @@
     stateVersion = 6;
   };
 
+  # Let macOS group new IntelliJ project windows into native tabs.
+  system.defaults.NSGlobalDomain.AppleWindowTabbingMode = "always";
+
   users.users.${username} = {
     name = username;
     home = "/Users/${username}";

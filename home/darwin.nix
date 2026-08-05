@@ -23,6 +23,7 @@
     chrome = "/usr/bin/open -a \"/Applications/Google Chrome.app\" --args";
     c = "open -a \"Cursor\"";
     v = "open -a \"Visual Studio Code\"";
+    idea = "\"/Applications/IntelliJ IDEA.app/Contents/MacOS/idea\"";
     oo = "cursor $(find . '/' | fzf)";
     brew_x86 = "/usr/local/Homebrew/bin/brew";
   };
@@ -54,6 +55,69 @@
     "${config.home.homeDirectory}/.spicetify"
     "${config.home.homeDirectory}/.codeium/windsurf/bin"
   ];
+
+  # IntelliJ stores this preference in a versioned configuration directory.
+  # Merge only the managed value so other IDE settings remain writable.
+  home.activation.configureIntelliJProjectTabs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${pkgs.python3}/bin/python3 <<'PY'
+    import os
+    import plistlib
+    import re
+    import xml.etree.ElementTree as ET
+    from pathlib import Path
+
+    jetbrains_root = Path("${config.home.homeDirectory}") / "Library/Application Support/JetBrains"
+    options_dirs = set(jetbrains_root.glob("IntelliJIdea*/options"))
+
+    app_info = Path("/Applications/IntelliJ IDEA.app/Contents/Info.plist")
+    if app_info.exists():
+        with app_info.open("rb") as source:
+            version = str(plistlib.load(source).get("CFBundleShortVersionString", ""))
+        version_match = re.match(r"(\d{4}\.\d+)", version)
+        if version_match:
+            options_dirs.add(
+                jetbrains_root / f"IntelliJIdea{version_match.group(1)}" / "options"
+            )
+
+    for options_dir in sorted(options_dirs):
+        options_dir.mkdir(parents=True, exist_ok=True)
+        settings_path = options_dir / "ide.general.xml"
+
+        if settings_path.exists():
+            tree = ET.parse(settings_path)
+            application = tree.getroot()
+        else:
+            application = ET.Element("application")
+            tree = ET.ElementTree(application)
+
+        general_settings = application.find("./component[@name='GeneralSettings']")
+        if general_settings is None:
+            general_settings = ET.SubElement(
+                application, "component", {"name": "GeneralSettings"}
+            )
+
+        project_opening = general_settings.find(
+            "./option[@name='confirmOpenNewProject2']"
+        )
+        if project_opening is None:
+            project_opening = ET.SubElement(
+                general_settings,
+                "option",
+                {"name": "confirmOpenNewProject2"},
+            )
+
+        if project_opening.get("value") == "0":
+            continue
+
+        project_opening.set("value", "0")
+        ET.indent(tree, space="  ")
+        temporary_path = settings_path.with_suffix(".xml.tmp")
+        tree.write(temporary_path, encoding="unicode", xml_declaration=False)
+        with temporary_path.open("a") as output:
+            output.write("\n")
+        os.replace(temporary_path, settings_path)
+    PY
+  '';
 
   # commit signing via 1Password (app path only exists on macOS)
   programs.git.signing = {
