@@ -65,6 +65,10 @@
   programs.zsh = {
     enable = true;
 
+    profileExtra = ''
+      eval "$(${lib.getExe pkgs.mise} activate zsh --shims)"
+    '';
+
     syntaxHighlighting.enable = true;
 
     oh-my-zsh = {
@@ -164,7 +168,21 @@
   programs.fzf.enable = true;
 
   # polyglot runtime version manager (node, python, ...)
-  programs.mise.enable = true;
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
+
+    globalConfig.settings = {
+      idiomatic_version_file_enable_tools = [ "node" ];
+
+      # Trust repo `.mise.toml`s under the dev roots, so a fresh clone or
+      # worktree does not need its own `mise trust` run.
+      trusted_config_paths = [
+        "${config.home.homeDirectory}/dev/repos"
+        "${config.home.homeDirectory}/conductor/workspaces"
+      ];
+    };
+  };
 
   programs.git = {
     enable = true;

@@ -106,5 +106,7 @@ Add managed per-machine private configuration once the preferred flow is settled
 
 - **Terraform = OpenTofu** here (`t` = `tofu`) — free license means prebuilt
   binaries from the nix cache.
-- **Node versions via mise**: `mise use -g node@22`.
+- **Node versions via mise**: `mise use -g node@22`. Repo `.mise.toml`s under
+  `~/dev/repos` and `~/conductor/workspaces` are trusted by default, so a new
+  clone or worktree needs no `mise trust`.
 - **GitHub auth via `gh`** (`gh auth login`) — no credential files.
