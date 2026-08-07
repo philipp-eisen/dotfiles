@@ -172,15 +172,19 @@
     enable = true;
     enableZshIntegration = true;
 
-    globalConfig.settings = {
-      idiomatic_version_file_enable_tools = [ "node" ];
+    globalConfig = {
+      tools.node = "22.23.1";
 
-      # Trust repo `.mise.toml`s under the dev roots, so a fresh clone or
-      # worktree does not need its own `mise trust` run.
-      trusted_config_paths = [
-        "${config.home.homeDirectory}/dev/repos"
-        "${config.home.homeDirectory}/conductor/workspaces"
-      ];
+      settings = {
+        idiomatic_version_file_enable_tools = [ "node" ];
+
+        # Trust repo `.mise.toml`s under the dev roots, so a fresh clone or
+        # worktree does not need its own `mise trust` run.
+        trusted_config_paths = [
+          "${config.home.homeDirectory}/dev/repos"
+          "${config.home.homeDirectory}/conductor/workspaces"
+        ];
+      };
     };
   };
 
