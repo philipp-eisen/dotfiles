@@ -32,12 +32,14 @@
     global.brewfile = true;
 
     onActivation = {
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
       cleanup = "check";
       extraEnv = {
         HOMEBREW_NO_ANALYTICS = "1";
         HOMEBREW_NO_ENV_HINTS = "1";
+        # Homebrew Bundle needs this to find Cursor for `vscode` entries.
+        PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       };
     };
 
@@ -58,10 +60,16 @@
     ];
 
     brews = [
-      # Installed custom-tap formulae kept manual until their taps are trusted:
-      # bridle, depot, padel-tui, supabase, terraform.
       "amass"
       "anomalyco/tap/opencode"
+      "depot/tap/depot"
+      "f1bonacc1/tap/process-compose"
+      "hashicorp/tap/terraform"
+      "neiii/bridle/bridle"
+      "oven-sh/bun/bun"
+      "philipp-eisen/tap/padel-tui"
+      "pulumi/tap/pulumi"
+      "supabase/tap/supabase"
       "awscli"
       "azure-cli"
       "bat"
